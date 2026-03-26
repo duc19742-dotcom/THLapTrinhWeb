@@ -1,0 +1,72 @@
+@model WebsiteBanHang.Models.Product
+
+@{
+    ViewData["Title"] = "Cập nhật sản phẩm";
+}
+
+<h2>Cập nhật sản phẩm</h2>
+
+<form asp-area="Admin" asp-controller="Product" asp-action="Update" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <input asp-for="Description" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CategoryId" class="form-label">Danh mục</label>
+        <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select"></select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Ảnh hiện tại</label><br />
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <img id="previewImage" src="@Model.ImageUrl" width="150" />
+        }
+        else
+        {
+            <img id="previewImage" src="" width="150" style="display:none;" />
+        }
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Chọn ảnh mới</label>
+        <input type="file" id="imageInput" name="imageUrl" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
+    <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById("imageInput").addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const preview = document.getElementById("previewImage");
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}

@@ -1,0 +1,35 @@
+@model IEnumerable<WebsiteBanHang.Models.Category>
+
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<h2>Categories</h2>
+
+<p>
+    <a asp-action="Add" class="btn btn-success">Thêm loại</a>
+</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Tên loại</th>
+            <th>Chức năng</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model)
+        {
+            <tr>
+                <td>@category.Id</td>
+                <td>@category.Name</td>
+                <td>
+                    <a asp-action="Display" asp-route-id="@category.Id" class="btn btn-primary btn-sm">View</a>
+                    <a asp-action="Update" asp-route-id="@category.Id" class="btn btn-info btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
