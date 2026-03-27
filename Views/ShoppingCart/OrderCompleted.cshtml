@@ -1,0 +1,15 @@
+@model int
+
+@{
+    ViewData["Title"] = "Đặt hàng thành công";
+}
+
+<div class="container mt-4 text-center">
+    <h2>Order Completed</h2>
+    <p>Cảm ơn bạn đã đặt hàng.</p>
+    <p>Mã đơn hàng của bạn là: <strong>#@Model</strong></p>
+
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+        Tiếp tục mua hàng
+    </a>
+</div>

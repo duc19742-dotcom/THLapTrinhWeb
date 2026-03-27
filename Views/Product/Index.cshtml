@@ -1,46 +1,51 @@
 @model IEnumerable<WebsiteBanHang.Models.Product>
+@using WebsiteBanHang.Models
 
 @{
     ViewData["Title"] = "Products";
 }
 
-<h2>Products</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Danh sách sản phẩm</h2>
+    @if (User.IsInRole(SD.Role_Admin))
+    {
+        <a asp-action="Add" class="btn btn-success shadow-sm"><i class="bi bi-plus-lg"></i> Thêm sản phẩm</a>
+    }
+</div>
 
-<p>
-    <a asp-action="Add" class="btn btn-success">Thêm sản phẩm</a>
-</p>
-
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Tên</th>
-            <th>Giá</th>
-            <th>Mô tả</th>
-            <th>Ảnh sản phẩm</th>
-            <th>Loại</th>
-            <th>Chức năng</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var product in Model)
-        {
-            <tr>
-                <td>@product.Name</td>
-                <td>@product.Price</td>
-                <td>@product.Description</td>
-                <td>
-                    @if (!string.IsNullOrEmpty(product.ImageUrl))
-                    {
-                        <img src="@product.ImageUrl" alt="@product.Name" style="max-width:100px;" />
-                    }
-                </td>
-                <td>@product.Category?.Name</td>
-                <td>
-                    <a asp-action="Display" asp-route-id="@product.Id" class="btn btn-primary btn-sm">View</a>
-                    <a asp-action="Update" asp-route-id="@product.Id" class="btn btn-info btn-sm">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger btn-sm">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+    @foreach (var product in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                @if (!string.IsNullOrEmpty(product.ImageUrl))
+                {
+                    <img src="@product.ImageUrl" class="card-img-top p-2" alt="@product.Name" style="height: 200px; object-fit: contain;">
+                }
+                else
+                {
+                    <div class="bg-light text-center py-5" style="height: 200px;"><i class="bi bi-image h1 text-muted"></i></div>
+                }
+                <div class="card-body">
+                    <span class="badge bg-info mb-2">@product.Category?.Name</span>
+                    <h5 class="card-title fw-bold text-truncate">@product.Name</h5>
+                    <p class="card-text text-danger fw-bold fs-5">@product.Price.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))</p>
+                    <p class="card-text text-muted small text-truncate">@product.Description</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0 pb-3">
+                    <div class="btn-group w-100">
+                        <a asp-action="Display" asp-route-id="@product.Id" class="btn btn-outline-primary btn-sm">Chi tiết</a>
+                        @if (User.IsInRole(SD.Role_Admin))
+                        {
+                            <a asp-action="Update" asp-route-id="@product.Id" class="btn btn-outline-warning btn-sm">Sửa</a>
+                            <a asp-action="Delete" asp-route-id="@product.Id" class="btn btn-outline-danger btn-sm">Xóa</a>
+                        }
+                    </div>
+                    <div class="mt-2">
+                        <a asp-area="" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@product.Id" class="btn btn-primary btn-sm">Mua ngay</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

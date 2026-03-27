@@ -1,7 +1,40 @@
-﻿@{
+﻿@model IEnumerable<WebsiteBanHang.Models.Product>
+
+@{
     ViewData["Title"] = "Home Page";
 }
+<div class="container mt-4">
+    <div class="row">
+        @foreach (var product in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    @if (!string.IsNullOrEmpty(product.ImageUrl))
+                    {
+                        <img src="@product.ImageUrl" class="card-img-top" style="height:250px; object-fit:cover;" />
+                    }
 
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text">@product.Description</p>
+                        <p><strong>Giá:</strong> @product.Price.ToString("N0") VNĐ</p>
+                        <p><strong>Danh mục:</strong> @product.Category?.Name</p>
+                    </div>
+
+                    <div class="card-footer">
+                        <a asp-area=""
+                           asp-controller="ShoppingCart"
+                           asp-action="AddToCart"
+                           asp-route-id="@product.Id"
+                           class="btn btn-primary">
+                            Add to Cart
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>

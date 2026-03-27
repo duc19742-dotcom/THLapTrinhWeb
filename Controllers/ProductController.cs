@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebsiteBanHang.Models;
@@ -21,12 +22,14 @@ namespace WebsiteBanHang.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
+        [AllowAnonymous] // Mọi người (kể cả khách) đều xem được danh sách
         public async Task<IActionResult> Index()
         {
             var products = await _productRepository.GetAllAsync();
             return View(products);
         }
 
+        [AllowAnonymous] // Xem chi tiết không cần đăng nhập
         public async Task<IActionResult> Display(int id)
         {
             var product = await _productRepository.GetByIdAsync(id);
@@ -38,6 +41,8 @@ namespace WebsiteBanHang.Controllers
             return View(product);
         }
 
+        // Chỉ Admin mới có quyền Thêm
+        [Authorize(Roles = SD.Role_Admin)]
         public async Task<IActionResult> Add()
         {
             var categories = await _categoryRepository.GetAllAsync();
@@ -46,6 +51,7 @@ namespace WebsiteBanHang.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = SD.Role_Admin)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(Product product, IFormFile? imageUrl)
         {
@@ -67,6 +73,8 @@ namespace WebsiteBanHang.Controllers
             return View(product);
         }
 
+        // Chỉ Admin mới có quyền Sửa
+        [Authorize(Roles = SD.Role_Admin)]
         public async Task<IActionResult> Update(int id)
         {
             var product = await _productRepository.GetByIdAsync(id);
@@ -81,6 +89,7 @@ namespace WebsiteBanHang.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = SD.Role_Admin)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(int id, Product product, IFormFile? imageUrl)
         {
@@ -123,6 +132,8 @@ namespace WebsiteBanHang.Controllers
             return View(product);
         }
 
+        // Chỉ Admin mới có quyền Xóa
+        [Authorize(Roles = SD.Role_Admin)]
         public async Task<IActionResult> Delete(int id)
         {
             var product = await _productRepository.GetByIdAsync(id);
@@ -135,6 +146,7 @@ namespace WebsiteBanHang.Controllers
         }
 
         [HttpPost, ActionName("DeleteConfirmed")]
+        [Authorize(Roles = SD.Role_Admin)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
